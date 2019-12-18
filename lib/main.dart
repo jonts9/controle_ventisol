@@ -1,3 +1,4 @@
+import 'package:controle_ventisol/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -51,155 +52,199 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    SystemChrome.setPreferredOrientations([
+      //DeviceOrientation.portraitUp,
+      //DeviceOrientation.portraitDown,
+    ]);
 
+    SizeConfig().init(context);
+
+    return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(16),
-          child: Card(
-            child: ListView(
-              children: <Widget>[
-                _velocidades(),
-                _timers(),
-                _botoesMaiores(),
-              ],
-            ),
-          )
+        child: Card(
+          margin: EdgeInsets.all(8),
+          color: Colors.white70,
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "VELOCIDADES",
+                style: TextStyle(
+                    fontSize: SizeConfig.blockSizeVertical * 4,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 6
+                ),
+              ),
+              _buildContainerVelocidades(),
+              _buildContainerTimers(),
+              _buildContainerBotoesMaiores(),
+              _buildContainerLogo(),
+            ],
+          ),
         )
       )
     );
   }
 
-  _row(children){
-    return new Row(
-      children: children,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  _buildContainerVelocidades() {
+    return Expanded(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _botaoPadrao("1", _onPressedVelocidade1),
+                _botaoPadrao("2", _onPressedVelocidade2),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _botaoPadrao("REV", _onPressedRev),
+                _botaoPadrao("3", _onPressedVelocidade3),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  _column(children){
-    return new Column(
-      children: children,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
+  _buildContainerTimers() {
+    return Expanded(
+      child: Container(
+        color: Colors.black,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _botaoPadrao("1 Hr", _onPressedTimer1),
+                _botaoPadrao("2 Hr", _onPressedTimer2),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _botaoPadrao("4 Hr", _onPressedTimer4),
+                _botaoPadrao("8 Hr", _onPressedTimer8),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildContainerBotoesMaiores(){
+    return Expanded(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _botaoMaior("LUZ", _onPressedLuz)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _botaoMaior("DESLIGA", _onPressedDesliga)
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildContainerLogo() {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Image(
+            image: AssetImage(
+              'assets/images/logo-ventisol.png'
+            ),
+            height: SizeConfig.blockSizeVertical * 4,
+          )
+        ],
+      ),
     );
   }
 
   _botaoPadrao(text, onPressed){
-    return new RaisedButton(
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: TextStyle(
-          color: Colors.white,
+    return ButtonTheme(
+      minWidth: SizeConfig.blockSizeHorizontal * 30,
+      height: SizeConfig.blockSizeVertical * 7,
+      child: new RaisedButton(
+        onPressed: onPressed,
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: SizeConfig.blockSizeVertical * 3
+          ),
+        ),
+        color: Colors.white38,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(50)
+          ),
+          side: BorderSide(
+            width: 1,
+            color: Colors.black12
+          ),
         ),
       ),
-      color: Colors.black26,
     );
   }
 
   _botaoMaior(text, onPressed){
-    return new RaisedButton(
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: TextStyle(
-          color: Colors.blue,
+    return ButtonTheme(
+      minWidth: SizeConfig.blockSizeHorizontal * 45,
+      height: SizeConfig.blockSizeVertical * 7,
+      child: new RaisedButton(
+        onPressed: onPressed,
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.indigo,
+            fontWeight: FontWeight.bold,
+            fontSize: SizeConfig.blockSizeVertical * 3
+          ),
+        ),
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(50)
+          ),
+          side: BorderSide(
+            width: 1,
+            color: Colors.black12
+          )
         ),
       ),
-      color: Colors.white,
     );
   }
 
-  _velocidades(){
-    return Container(
-      constraints: BoxConstraints.expand(height: 120),
-      color: Colors.white,
-      child: ListView(
-        children: <Widget>[
-          Center(child: Text("VELOCIDADES")),
-          _row(<Widget>[
-            _botaoPadrao("1", _onPressedVelocidade1),
-            _botaoPadrao("2", _onPressedVelocidade2),
-          ]),
-          _row(<Widget>[
-            _botaoPadrao("REV", _onPressedRev),
-            _botaoPadrao("3", _onPressedVelocidade3),
-          ])
-        ],
-      ),
-    );
-  }
-  _timers(){
-    return Container(
-      constraints: BoxConstraints.expand(height: 120),
-      color: Colors.black,
-      child: ListView(
-        children: <Widget>[
-          _row(<Widget>[
-            _botaoPadrao("1Hr", _onPressedTimer1),
-            _botaoPadrao("2Hr", _onPressedTimer2),
-          ]),
-          _row(<Widget>[
-              _botaoPadrao("4Hr", _onPressedTimer4),
-              _botaoPadrao("8Hr", _onPressedTimer8),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-  _botoesMaiores(){
-    return Container(
-      constraints: BoxConstraints.expand(height: 240),
-      color: Colors.white,
-      child: ListView(
-        children: <Widget>[
-          _column(<Widget>[
-            _botaoMaior("LUZ", _onPressedLuz),
-            _botaoMaior("DESLIGA", _onPressedDesliga),
-          ])
-        ],
-      ),
-    );
-  }
-
-  _onPressedVelocidade1(){
-    _sendIr(v1);
-  }
-
-  _onPressedVelocidade2(){
-    _sendIr(v2);
-  }
-
-  _onPressedVelocidade3(){
-    _sendIr(v3);
-  }
-
-  _onPressedRev(){
-    _sendIr(rev);
-  }
-
-  _onPressedTimer1(){
-    _sendIr(t1);
-  }
-
-  _onPressedTimer2(){
-    _sendIr(t2);
-  }
-
-  _onPressedTimer4(){
-    _sendIr(t4);
-  }
-
-  _onPressedTimer8(){
-    _sendIr(t8);
-  }
-
+  _onPressedVelocidade1() => _sendIr(v1);
+  _onPressedVelocidade2() =>_sendIr(v2);
+  _onPressedVelocidade3() => _sendIr(v3);
+  _onPressedRev() => _sendIr(rev);
+  _onPressedTimer1() => _sendIr(t1);
+  _onPressedTimer2() => _sendIr(t2);
+  _onPressedTimer4() => _sendIr(t4);
+  _onPressedTimer8() => _sendIr(t8);
   _onPressedLuz() => _sendIr(luz);
-
-  _onPressedDesliga(){
-    _sendIr(desliga);
-  }
+  _onPressedDesliga() => _sendIr(desliga);
 
 }
