@@ -67,6 +67,11 @@ class MainActivity: FlutterActivity() {
         }
       }
     }
+
+    if (Build.MANUFACTURER.equals("xiaomi", ignoreCase = true)){
+      convert = 0
+    }
+
     // 2. Convert the patterns
     if (convert.toInt() != 0) {
       for (i in irData.indices) {
